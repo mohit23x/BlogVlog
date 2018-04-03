@@ -1,0 +1,21 @@
+<a href="{% url 'login' %}">LOGIN</a>&nbsp;&nbsp;&nbsp;
+<a href="{% url 'logout' %}">LOGOUT</a>&nbsp;&nbsp;&nbsp;
+<a href="{% url 'signup' %}">siNgnUp</a>&nbsp;&nbsp;&nbsp;
+<a href="{% url 'tuesday' %}">tuesday</a>&nbsp;&nbsp;&nbsp;
+
+<br>
+<hr>
+
+{{ request.user }}
+<hr>
+<h3><a href="{% url 'postnew' %}">New Post</a></h3>
+<br>
+
+{% for post in object_list %}
+
+<h1><a href="{% url 'postdetail' post.pk %}">{{ post.title }}</a></h1><span><a href="{% url 'postedit' post.pk %}"><u>edit</u></a></span>
+
+<h4><a href="{% url 'myposts' post.author %}">{{ post.author }}</a></h4>
+<p>{{ post.text }}</p>
+<br>
+{% endfor %}

@@ -1,0 +1,11 @@
+<a href="{% url 'homepage' %}">Homepage</a>
+<br><hr>
+<h2>my post</h2>
+
+{% for post in authorallpost %}
+<h2><a href="{% url 'postdetail' post.pk %}">{{ post.title }}</a></h2>
+
+<p>{{ post.text }}</p>
+{% endfor %}
+
+<hr>

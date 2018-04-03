@@ -1,0 +1,50 @@
+<a href="{% url 'homepage' %}">Homepage</a>
+<br><hr>
+<h2>{{ data1.title }}</h2>
+<h4>{{ data1.author }}</h4>
+<h5>{{ data1.text }}</h5>
+
+<br>
+<a href="{% url 'postdelete' data1.pk %}"><u>delete</u></a>
+<br>
+<h3>comments</h3>
+<form method="POST">
+{% csrf_token %}
+
+{{ form1 }}
+
+<button type="submit">submit</button>
+
+</form>
+<br>
+<hr>
+<br>
+{% for comments in com %}
+<p>{{ comments.user }} ---
+{{ comments.message }}&nbsp;&nbsp;{% if comments.user == request.user %}<a href="{% url 'commentdelete' comments.pk %}">delete</a>{% endif %}
+<br>
+<form method='POST'>
+    {% csrf_token %}
+
+    <label for="id_whichcomment">whichcomment</label>
+    <input type="hidden" name='whichcomment' id='id_whichcomment' value="{{comments.id}}">
+    &nbsp;
+    <label for="id_message">Message:</label>
+    <input type="text" name='message' maxlength="250" id="id_message">
+
+    <button type="submit">submit</button>
+</form>
+
+{% for r in replycom %}
+
+{% if r.whichcomment.message == comments.message %}
+
+<p><blockquote>{{r.user }} -- {{ r.message }}&nbsp;&nbsp;{% if r.user == request.user %}<a href="{% url 'commentreplydelete' r.pk %}">delete</a>{% endif %}</blockquote></p>
+
+{% endif %}
+
+{% endfor %}
+</p>
+
+<br>
+{% endfor %}

@@ -1,0 +1,24 @@
+
+
+<h1>tuesday</h1>
+<hr>
+<a href="{% url 'login' %}">Login</a>/ <a href="{% url 'homepage' %}">Homepage</a>
+<br><hr>
+<h3>add new comment</h3>
+<form method='POST'>
+    {% csrf_token %}
+    <label for="id_message">Message</label>
+    <input type="text" name='message' id="id_message">
+    <button type='submit'>Submit</button>
+</form><br><hr style="color: red"><br>
+<div class="comment">
+<ul>
+{% for comment in data %}
+    {% include 'tuesday/comment.html' %}
+    <hr>
+{% endfor %}
+</ul>
+</div>
+
+
+
