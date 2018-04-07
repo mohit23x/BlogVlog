@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="row">
+    <div class="cell-12">
+            
+        <a href="#" class="brand">Brand name</a>
+        <a href="#" class="brand no-hover">Brand name</a>
+
+    </div>
+</div>
+<br>
+<hr>
+
+<hr>
+<h3><a href="{% url 'postnew' %}">New Post</a></h3>
+<br>
+
+{% for post in object_list %}
+
+<h1><a href="{% url 'postdetail' post.pk %}">{{ post.title }}</a></h1><span><a href="{% url 'postedit' post.pk %}"><u>edit</u></a></span>
+
+<h4><a href="{% url 'myposts' post.author %}">{{ post.author }}</a></h4>
+<p>{{ post.text }}</p>
+<br>
+{% endfor %}
+
+{% if is_paginated %}
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+            <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+            <li class='disabled'><span>&laquo;</span></li>
+        {% endif %}
+        {% for i in paginator.page_range %}
+            {% if page_obj.number == i %}
+                <li class="active"><span>{{ i }} (curent page)</span></li>
+            {% else %}
+                <li><a href="?page={{i}}">{{i}}</a></li>
+            {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+            <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+        {% else %}
+            <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+    {% endif %}
+
+
+
+
+<br>
+
+
+
+
+
+
+
+    <h1 class="text-center">Metro 4</h1>
+    <h3 class="text-center">The Components Library</h3>
+
+{% endblock %}

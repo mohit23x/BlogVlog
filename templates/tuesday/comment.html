@@ -28,7 +28,7 @@
         $.ajax({
             type:"POST",
             url:"{% url 'tuesday' %}",
-            data:{"message":$("#id_message").val(), "parent":$("id_parent").val()},
+            data:{"message":$("#id_message").val(), "parent":$("#id_parent").val()},
             beforeSend:function(xhr){
                 xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'));  
             },

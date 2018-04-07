@@ -4,7 +4,9 @@ from . import views
 
 urlpatterns = [
     path('', views.Homepage.as_view(), name='homepage'),
+    path('aboutus', views.AboutUs.as_view(), name="aboutus"),
     path('post/<int:pk>', views.PostDetail, name='postdetail'),
+    path('newpost', views.newpost, name='newpost'),
     path('postedit/<int:pk>', views.PostEdit.as_view(), name='postedit'),
     path('postdelete/<int:pk>', views.BlogDelete.as_view(), name='postdelete'),
     path('mypost/<author>', views.MyPost.as_view(), name='myposts'),
@@ -12,5 +14,6 @@ urlpatterns = [
     path('commentdelete/<int:pk>', views.CommentDelete.as_view(), name='commentdelete'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/', include('accounts.urls')),
-    path('post/postnew', views.BlogPostNew.as_view(), name='postnew')
+    path('post/postnew', views.BlogPostNew.as_view(), name='postnew'),
+    path('mockup', views.mockup, name='mockup')
 ]

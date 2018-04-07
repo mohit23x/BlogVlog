@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+
+
+{% block body %}
+<br><br><br><br>
+
+<div class="row">
+<div class="col-sm-12 col-md-10 offset-md-1">
+
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-8">Formatting Help</h1><hr>
+        <p class="lead">
+                <code>&lt;strong&gt;This is bold&lt;/strong&gt;</code> = <strong>This is bold</strong>
+        </p><hr>
+        <p class="lead">
+                <code>&lt;i&gt;This is italics&lt;/i&gt;</code> = <i>This is italics</i>
+        </p><hr>
+        <p class="lead">
+                <pre><code>&lt;ul&gt;
+&lt;li&gt;This is item1&lt;/li&gt;
+&lt;li&gt;This is item2&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+<ul><li>This is item1</li><li>This is item2</li></ul>
+        </p><hr>
+        <p class="lead">
+                <code>&lt;br&gt;</code> = new line.
+        </p><hr>
+        
+        <p class="lead"><b>NOTE: </b><strong> Use this line to show images, Update your image name after uploading.</strong></p>
+        <div class="row" >
+            <div class="col-sm-10" >
+                <div style='border:2px solid black;' class='p-3'>
+                <code id="code">&lt;img class="img-fluid postimg" src="/media/post_images_i/YOUR_IMAGE_NAME_WITH_EXTENSION" &gt;</code>
+            </div>
+            </div>
+            <div class="col-sm-2">
+                <button class="btn-primary" onclick="copyToClipboard('#code')">copy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- copy button logic -->
+<script>
+        function copyToClipboard(element) {
+            var $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val($(element).text()).select();
+            document.execCommand("copy");
+            $temp.remove();
+          }
+</script>
+
+<h3>Lets Post the Blog -</h3><hr>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    {% for hidden_field in form.hidden_fields %}
+    {{ hidden_field.errors }}
+    {{ hidden_field }}
+    {% endfor %}
+
+{% for field in form.visible_fields %}
+    <div class="form-group">
+      {{ field.label_tag }}
+
+      {% if form.is_bound %}
+        {% if field.errors %}
+          {% render_field field class="form-control is-invalid" %}
+          {% for error in field.errors %}
+            <div class="invalid-feedback">
+              {{ error }}
+            </div>
+          {% endfor %}
+        {% else %}
+          {% render_field field class="form-control is-valid" %}
+        {% endif %}
+      {% else %}
+        {% render_field field class="form-control" %}
+      {% endif %}
+
+      {% if field.help_text %}
+        <small class="form-text text-muted">{{ field.help_text }}</small>
+      {% endif %}
+    </div>
+  {% endfor %}
+<br>
+  <hr><br>
+    {{ formset.management_form }}
+    {% for form in formset %}
+    {% for field in form.visible_fields %}
+    <div class="form-group">
+      {{ field.label_tag }}
+      {% render_field field class="form-control" %}
+      {% if field.help_text %}
+        <small class="form-text text-muted">{{ field.help_text }}</small>
+      {% endif %}
+    </div>
+     {% endfor %}
+    {% endfor %}
+
+
+    <button type="submit" class="btn btn-success">Post Blog</button>
+    <a href="{% url 'homepage' %}" class="btn btn-danger">Cancel</a>
+  </form>
+</div></div>
+
+
+  {% load static %}
+  <script src="{% static 'js/jquery-file-upload/vendor/jquery.ui.widget.js' %}"></script>
+  <script src="{% static 'js/jquery-file-upload/jquery.iframe-transport.js' %}"></script>
+  <script src="{% static 'js/jquery-file-upload/jquery.fileupload.js' %}"></script>
+{% endblock %}
+
+
+

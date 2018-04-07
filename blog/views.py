@@ -1,19 +1,58 @@
 from django.shortcuts import render, reverse
-from django.views.generic import TemplateView, ListView, DeleteView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Blog, Comment, CommentReply
+from django.views.generic import TemplateView, ListView, DeleteView, DetailView, CreateView, UpdateView, DeleteView, View
+from .models import Blog, Comment, CommentReply, Document
 from django.urls import reverse_lazy
-from .forms import CommentForm, CommentReplyForm
+from .forms import CommentForm, CommentReplyForm, DocumentForm, BlogForm
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.forms import formset_factory, modelformset_factory
 
+
+def mockup(request):
+    return render(request, 'details mockup.html')
 
 class Homepage(ListView):
     model = Blog
     template_name = 'homepage.html'
+    paginate_by = 5
+    queryset = Blog.objects.all()
+
+class AboutUs(TemplateView):
+    template_name = 'aboutus.html'
 
 '''class PostDetail(DetailView):
     model = Blog
     template_name = 'postdetail.html'''
+
+
+
+def newpost(request):
+    
+    DocumentFormSet = modelformset_factory(Document, form=DocumentForm, extra=3)
+
+    if request.method == 'POST':
+        form = BlogForm(request.POST)
+        formset = DocumentFormSet(request.POST, request.FILES, queryset=Document.objects.none())
+
+        if form.is_valid() and formset.is_valid:
+            neww_post = form.save(commit=False)
+            neww_post.author = User.objects.get(username=request.user.username)
+            neww_post.save()
+            try:
+                for f in formset.cleaned_data:
+                    image = f['image']
+                    photo = Document(blog=neww_post, image=image)
+                    photo.save()
+            except:
+                pass
+            return render(request, 'homepage.html')
+    else:
+        form = BlogForm        
+        formset = DocumentFormSet(queryset=Document.objects.none())
+        return render(request, 'postnew.html', {'form':form, 'formset':formset})
+
+
 
 def PostDetail(request, pk):
     form1 = CommentForm
@@ -21,6 +60,7 @@ def PostDetail(request, pk):
     data1 = Blog.objects.get(pk=pk)
     com = Comment.objects.filter(blog=data1)
     replycom = CommentReply.objects.filter(blog=data1)
+    documents = Document.objects.filter(blog=data1)
   
     if request.method == 'POST':
         
@@ -60,7 +100,7 @@ def PostDetail(request, pk):
                 return HttpResponseRedirect(reverse('postdetail', args=(), kwargs={'pk': pk}))
                 
     else:
-        return render(request, 'postdetail.html', {'data1': data1, 'form1':form1, 'com': com, 'form2':form2, 'replycom':replycom})
+        return render(request, 'details mockup.html', {'data1': data1, 'form1':form1, 'com': com, 'form2':form2, 'replycom':replycom, 'documents':documents})
     
 
 
@@ -100,3 +140,16 @@ class CommentDelete(DeleteView):
     success_url = reverse_lazy('homepage')
 
     
+
+
+
+    '''
+    
+    <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro.min.css">
+    <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-colors.min.css">
+    <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-rtl.min.css">
+    <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-icons.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.metroui.org.ua/v4/js/metro.min.js"></script>
+
+    '''

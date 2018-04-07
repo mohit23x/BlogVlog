@@ -1,0 +1,285 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<section class="mbr-section content5 cid-qOrpftxYjK mbr-parallax-background" id="content5-z">
+
+    <div class="mbr-overlay" style="opacity: 0.4; background-color: rgb(35, 35, 35);">
+    </div>
+
+    <div class="container">
+        <div class="media-container-row">
+            <div class="title col-12 col-md-8">
+                <h2 class="align-center mbr-bold mbr-white pb-3 mbr-fonts-style display-1">
+                    {{ data1.title }}<br></h2>
+                <h3 class="mbr-section-subtitle align-center mbr-light mbr-white pb-3 mbr-fonts-style display-5">
+                    {{ data1.subtitle }}
+                </h3>
+                
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .cid-qOrpftxYjK{
+        background-image: url("{{ data1.topbanner.url }}");
+    }
+</style>
+<section class="mbr-section article content1 cid-qOrqewdLpP" id="content1-14" >
+
+
+    <div class="container">
+        <div class="media-container-row">
+            <div class="mbr-text col-12 col-md-8 mbr-fonts-style display-5">
+                
+                <h6><i>Total words - {{ data1.text|wordcount }}</i></h6>
+
+                {% autoescape off %}
+                {{ data1.text }}
+                {% endautoescape %}
+
+                <img src="" class="img-fluid img-thumbnail" alt="">
+                {% load static%}
+
+                <p>{{ data1.document.url}}</p>
+                <p>{{ data1.document.name }}</p>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- comments section code -->
+
+<div class="row">
+        <div class="col-sm-12 col-md-8 offset-md-2" >
+<h3>comments</h3>
+<form method="POST">
+{% csrf_token %}
+
+{{ form1 }}
+
+<button type="submit">submit</button>
+
+</form>
+<br>
+<hr>
+<br>
+
+{% for comments in com %}
+<p>{{ comments.user }} ---
+{{ comments.message }}&nbsp;&nbsp;{% if comments.user == request.user %}<a href="{% url 'commentdelete' comments.pk %}">delete</a>{% endif %}
+<br>
+<form method='POST'>
+    {% csrf_token %}
+
+    <label for="id_whichcomment">whichcomment</label>
+    <input type="hidden" name='whichcomment' id='id_whichcomment' value="{{comments.id}}">
+    &nbsp;
+    <label for="id_message">Message:</label>
+    <input type="text" name='message' maxlength="250" id="id_message">    
+    <button type="submit">submit</button>
+</form>
+<ul>
+{% for r in replycom %}
+
+{% if r.whichcomment.message == comments.message %}
+
+<li><blockquote>{{r.user }} -- {{ r.message }}&nbsp;&nbsp;{% if r.user == request.user %}<a href="{% url 'commentreplydelete' r.pk %}">delete</a>{% endif %}</blockquote></li>
+
+{% endif %}
+
+{% endfor %}
+</ul></p>
+
+<br>
+{% endfor %}
+
+</div></div>
+
+
+
+
+
+<section class="testimonials3 cid-qOrqR1IiVK" id="testimonials3-17">
+
+    <div class="container">
+        <div class="media-container-row">
+            <div class="media-content px-3 align-self-center mbr-white py-2">
+                <p class="mbr-text testimonial-text mbr-fonts-style display-7">
+                   It's really very amazing app that makes me finish html page in 3 minutes that's usually takes more than 1 hours at least from me if i did it from scratch
+                </p>
+                <p class="mbr-author-name pt-4 mb-2 mbr-fonts-style display-3">
+                   Julie C.
+                </p>
+                <p class="mbr-author-desc mbr-fonts-style display-7">
+                   INTERFACE DESIGNER
+                </p>
+            </div>
+
+            <div class="mbr-figure pl-lg-5" style="width: 60%;">
+              <img src="assets/images/face5.jpg">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features3 cid-qOrs7HrXvl" id="features3-1b">
+
+    
+
+    
+    <div class="container">
+        <div class="media-container-row">
+            <div class="card p-3 col-12 col-md-6 col-lg-4">
+                <div class="card-wrapper">
+                    <div class="card-img">
+                        <img src="assets/images/01.jpg" alt="Mobirise">
+                    </div>
+                    <div class="card-box">
+                        <h4 class="card-title mbr-fonts-style display-7">
+                            No Coding
+                        </h4>
+                        <p class="mbr-text mbr-fonts-style display-7">
+                            Mobirise is an easy website builder - just drop site elements to your page, add content and style it to look the way you like.
+                        </p>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="card p-3 col-12 col-md-6 col-lg-4">
+                <div class="card-wrapper">
+                    <div class="card-img">
+                        <img src="assets/images/02.jpg" alt="Mobirise">
+                    </div>
+                    <div class="card-box">
+                        <h4 class="card-title mbr-fonts-style display-7">
+                            Mobile Friendly
+                        </h4>
+                        <p class="mbr-text mbr-fonts-style display-7">
+                            All sites you make with Mobirise are mobile-friendly. You don't have to create a special mobile version of your site.
+                        </p>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="card p-3 col-12 col-md-6 col-lg-4">
+                <div class="card-wrapper">
+                    <div class="card-img">
+                        <img src="assets/images/03.jpg" alt="Mobirise">
+                    </div>
+                    <div class="card-box">
+                        <h4 class="card-title mbr-fonts-style display-7">
+                            Unique Styles
+                        </h4>
+                        <p class="mbr-text mbr-fonts-style display-7">
+                            Mobirise offers many site blocks in several themes, and though these blocks are pre-made, they are flexible.
+                        </p>
+                    </div>
+                    
+                </div>
+            </div>
+
+            
+        </div>
+    </div>
+</section>
+
+<section class="mbr-section info2 cid-qOrr15WCRi" id="info2-19">
+
+    
+
+    
+
+    <div class="container">
+        <div class="row main justify-content-center">
+            <div class="media-container-column col-12 col-lg-3 col-md-4">
+                <div class="mbr-section-btn align-left py-4">
+                    <a class="btn btn-primary display-4" href="https://mobirise.com">
+                    <span class="mbri-preview mbr-iconfont"></span>
+                    SEE MORE
+                    </a>
+                </div>
+            </div>
+            <div class="media-container-column title col-12 col-lg-7 col-md-6">
+                <h2 class="align-right mbr-bold mbr-white pb-3 mbr-fonts-style display-2">WHY DONT YOU LOGIN</h2>
+                <h3 class="mbr-section-subtitle align-right mbr-light mbr-white mbr-fonts-style display-5">and enjoy various other features like reading, liking, commenting, connecting, posting etc.</h3>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section once="" class="cid-qOrru7r8z5" id="footer7-1a">
+
+    
+
+    
+
+    <div class="container">
+        <div class="media-container-row align-center mbr-white">
+            <div class="row row-links">
+                <ul class="foot-menu">
+                <li class="foot-menu-item mbr-fonts-style display-7">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</li><li class="foot-menu-item mbr-fonts-style display-7">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</li><li class="foot-menu-item mbr-fonts-style display-7">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</li><li class="foot-menu-item mbr-fonts-style display-7"></li><li class="foot-menu-item mbr-fonts-style display-7">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</li></ul>
+            </div>
+            <div class="row social-row">
+                <div class="social-list align-right pb-2">
+
+                <div class="soc-item">
+                        <a href="https://twitter.com/mobirise" target="_blank">
+                            <span class="socicon-twitter socicon mbr-iconfont mbr-iconfont-social"></span>
+                        </a>
+                    </div><div class="soc-item">
+                        <a href="https://www.facebook.com/pages/Mobirise/1616226671953247" target="_blank">
+                            <span class="socicon-facebook socicon mbr-iconfont mbr-iconfont-social"></span>
+                        </a>
+                    </div><div class="soc-item">
+                        <a href="https://www.youtube.com/c/mobirise" target="_blank">
+                            <span class="socicon-youtube socicon mbr-iconfont mbr-iconfont-social"></span>
+                        </a>
+                    </div><div class="soc-item">
+                        <a href="https://instagram.com/mobirise" target="_blank">
+                            <span class="socicon-instagram socicon mbr-iconfont mbr-iconfont-social"></span>
+                        </a>
+                    </div><div class="soc-item">
+                        <a href="https://plus.google.com/u/0/+Mobirise" target="_blank">
+                            <span class="socicon-googleplus socicon mbr-iconfont mbr-iconfont-social"></span>
+                        </a>
+                    </div><div class="soc-item">
+                        <a href="https://www.behance.net/Mobirise" target="_blank">
+                            <span class="socicon-behance socicon mbr-iconfont mbr-iconfont-social"></span>
+                        </a>
+                    </div></div>
+            </div>
+            <div class="row row-copirayt">
+                <p class="mbr-text mb-0 mbr-fonts-style mbr-white align-center display-7">
+                    © Copyright 2017 Mobirise - All Rights Reserved
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+<script>
+
+    $(document).ready(function(){
+        var src = $('.postimg').attr('src');
+        console.log(src)
+        $('img.postimg').attr('src', src.replace('images_i','images_{{data1.id}}'));
+      });
+      
+</script>
+</body>
+</html>
+
+{% endblock %}

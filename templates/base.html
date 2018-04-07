@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <!-- Site made with Mobirise Website Builder v4.7.0, https://mobirise.com -->
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Mobirise v4.7.0, mobirise.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+  {% load static %}
+  <link rel="shortcut icon" href="{% static 'assets/images/logo2.png' %}" type="image/x-icon">
+  <meta name="description" content="Web Site Maker Description">
+  <title>homepage</title>
+  <link rel="stylesheet" href="{% static 'assets/web/assets/mobirise-icons/mobirise-icons.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/tether/tether.min.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap-grid.min.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap-reboot.min.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/dropdown/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/theme/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/mobirise/css/mbr-additional.css' %}" type="text/css">
+  
+  
+
+{% load static %}
+<script src="{% static 'assets/web/assets/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'assets/popper/popper.min.js' %}"></script>
+<script src="{% static 'assets/tether/tether.min.js' %}"></script>
+<script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/smoothscroll/smooth-scroll.js' %}"></script>
+<script src="{% static 'assets/dropdown/js/script.min.js' %}"></script>
+<script src="{% static 'assets/touchswipe/jquery.touch-swipe.min.js' %}"></script>
+<script src="{% static 'assets/theme/js/script.js' %}"></script>
+
+  
+</head>
+<body>
+  <section class="menu cid-qOrcLPjtgR" once="menu" id="menu1-h">
+
+    
+
+    <nav class="navbar navbar-expand beta-menu navbar-dropdown align-items-center navbar-fixed-top navbar-toggleable-sm">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </button>
+        <div class="menu-logo">
+            <div class="navbar-brand">
+                <span class="navbar-logo">
+                    <a href="https://mobirise.com">
+                        {% load static %}
+                         <img src="{% static 'assets/images/mbr-122x122.jpg' %}" alt="" title="" style="height: 3.8rem;">
+                    </a>
+                </span>
+                <span class="navbar-caption-wrap"><a class="navbar-caption text-white display-4" href="{% url 'homepage' %}">iBlog</a></span>
+            </div>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true">
+                <li class="nav-item dropdown open">
+                    <a class="nav-link link text-white dropdown-toggle display-4" data-toggle="dropdown-submenu" aria-expanded="true">
+                        <span class="mbri-smile-face mbr-iconfont mbr-iconfont-btn"></span>
+                        Category
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="text-white dropdown-item display-4" href="https://mobirise.com">technology</a>
+                        <a class="text-white dropdown-item display-4" href="https://mobirise.com">sports</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link text-white display-4" href="{% url 'aboutus' %}">
+                        <span class="mbri-search mbr-iconfont mbr-iconfont-btn"></span>
+                        About Us
+                    </a>
+                </li>
+                {% if request.user.is_authenticated %}
+                <li class="nav-item dropdown open">
+                        <a class="nav-link link text-white dropdown-toggle display-4" href="https://mobirise.com" data-toggle="dropdown-submenu" aria-expanded="true">
+                            <span class="mbri-smile-face mbr-iconfont mbr-iconfont-btn"></span>
+                            {{ request.user}}
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="text-white dropdown-item display-4" href="https://mobirise.com">Profile</a>
+                            <a class="text-white dropdown-item display-4" href="{% url 'newpost' %}">New Post</a>
+                            <a class="text-white dropdown-item display-4" href="https://mobirise.com">Settings</a>
+                           <hr>
+                            <a class="btn btn-sm btn-warning display-4" href="{% url 'logout' %}">
+                                <span class="mbri-play mbr-iconfont mbr-iconfont-btn"></span>
+                                    Logout
+                            </a>
+                        </div>
+                    </li>
+                
+                {% else %}
+                <li>
+                <a class="btn btn-sm btn-primary display-4" href="{% url 'login' %}">
+                    <span class="mbri-play mbr-iconfont mbr-iconfont-btn"></span>
+                    Login
+                </a>
+            </li>
+                {% endif %}
+        </ul>
+        </div>
+    </nav>
+</section>
+
+
+{% block body %}
+
+{% endblock %}
+

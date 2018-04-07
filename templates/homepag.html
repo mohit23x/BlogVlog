@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<section class="mbr-section article content10 cid-qOrhqJzXAd" id="content10-l">     
+
+    <div class="container">
+        <div class="inner-container" style="width: 75%;">
+            <hr class="line" style="width: 17%;">
+            <div class="section-text align-center mbr-white mbr-fonts-style display-5">Hi <a href="http://www.profile.com" class="text-black">{{ request.user }}</a><br><em>We hope you Enjoy Reading !</em></div>
+            <hr class="line" style="width: 17%;">
+        </div>
+    </div>
+</section>
+
+
+<section class="features2 cid-qOretuXw6E" id="features2-j">
+    <div class="container">
+        <div class="media-container-row">
+            {% for post in object_list %}
+            <div class="card p-3 col-12 col-md-6 col-lg-4">
+                <div class="card-wrapper">
+                    <div class="card-img">
+                        {% load static %}
+                        <a href="{% url 'postdetail' post.pk %}"><img src="{{ post.topbanner.url }}" alt="Mobirise"></a>
+                    </div>
+                    <div class="card-box">
+                            <a href="{% url 'postdetail' post.pk %}">
+                                <h4 class="card-title pb-1 mbr-fonts-style display-7">
+                            {{ post.title }}
+                        </h4></a>
+                        <p class="card-title  mbr-fonts-style display-7">
+                                written by <a href="" class="text-black">{{ post.author }}</a>
+                        </p>
+                        <a href="{% url 'postdetail' post.pk %}" class="text-black">
+                            <p class="mbr-text mbr-fonts-style display-7">
+                            Mobirise  easy website builder - just drop site elements to your page, add content and style it to look the way you like. <a href="{% url 'postdetail' post.pk %}">Read more...</a>
+                        </p>
+                    </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% if is_paginated %}
+<div class="row">
+    <div class="col-sm-12 col-md-8 offset-md-2">
+    <br>
+<ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+        <li  class="page-item"><a  class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>    
+        </a></li>
+    {% else %}
+        <li class='disabled page-item'> <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a><li>
+    {% endif %}
+    {% for i in paginator.page_range %}
+        {% if page_obj.number == i %}
+            <li class="page-item active"><span><a class="page-link" href="?page={{i}}">{{ i }} </a></span></li>
+        {% else %}
+            <li  class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+        {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+        <li><a class="page-link"  href="?page={{ page_obj.next_page_number }}"> <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span></a></li>
+    {% else %}
+        <li class="disabled page-item"><a href=""  class="page-link" ><span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span></a></li>
+    {% endif %}
+</ul>
+{% endif %}
+
+</div></div>
+  
+</body>
+</html>
+
+
+
+{% endblock %}
