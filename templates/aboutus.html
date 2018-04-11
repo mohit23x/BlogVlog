@@ -10,7 +10,7 @@
             <div class="mbr-white col-md-10">
                 <h1 class="mbr-section-title mbr-bold pb-3 mbr-fonts-style display-2">iBlog is a free place to share thoughts</h1>
                 
-                <div class="mbr-section-btn"><a class="btn btn-md btn-secondary display-4" href="https://mobirise.com">WRITE BLOG</a>
+                <div class="mbr-section-btn"><a class="btn btn-md btn-secondary display-4" href="{% if user.is_authenticated  %}{% url 'newpost' %}{% else %}{% url 'signin' %}{% endif %}">WRITE BLOG</a>
                     <a class="btn btn-md btn-white-outline display-4" href="{% url 'homepage' %}">READ BLOG</a></div>
             </div>
         </div>
@@ -23,8 +23,8 @@
 </section>
 
 <section class="cid-qOrknD3Gce" id="image2-p">
-    <figure class="mbr-figure">
-        <div class="image-block" style="width: 100%;">
+    <figure class="mbr-figure" id="next">
+        <div class="image-block" style="width: 100%;" >
             {% load static %}
             <img src="{% static 'assets/images/hdh5t8f-1-1680x1050.png' %}" alt="BACKGROUND IMAGE" title="">
             <figcaption class="mbr-figure-caption mbr-figure-caption-over">

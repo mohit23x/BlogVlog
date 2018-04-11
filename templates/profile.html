@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<link href="https://fonts.googleapis.com/css?family=Black+Han+Sans" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Hi+Melody" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.0.0/cropper.css" rel="stylesheet">
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+{% load static %}
+<script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.0.0/cropper.js"></script>
+
+<script>
+    $(function () {
+
+      /* SCRIPT TO OPEN THE MODAL WITH THE PREVIEW */
+      $("#id_myimage").change(function () {
+        if (this.files && this.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            $("#image").attr("src", e.target.result);
+            $("#modalCrop").modal("show");
+          }
+          reader.readAsDataURL(this.files[0]);
+        }
+      });
+
+      /* SCRIPTS TO HANDLE THE CROPPER BOX */
+      var $image = $("#image");
+      var cropBoxData;
+      var canvasData;
+      $("#modalCrop").on("shown.bs.modal", function () {
+        $image.cropper({
+          viewMode: 1,
+          aspectRatio: 1/1,
+          minCropBoxWidth: 200,
+          minCropBoxHeight: 200,
+          ready: function () {
+            $image.cropper("setCanvasData", canvasData);
+            $image.cropper("setCropBoxData", cropBoxData);
+          }
+        });
+      }).on("hidden.bs.modal", function () {
+        cropBoxData = $image.cropper("getCropBoxData");
+        canvasData = $image.cropper("getCanvasData");
+        $image.cropper("destroy");
+      });
+
+      $(".js-zoom-in").click(function () {
+        $image.cropper("zoom", 0.1);
+      });
+
+      $(".js-zoom-out").click(function () {
+        $image.cropper("zoom", -0.1);
+      });
+
+      /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
+      $(".js-crop-and-upload").click(function () {
+        var cropData = $image.cropper("getData");
+        $("#id_x").val(cropData["x"]);
+        $("#id_y").val(cropData["y"]);
+        $("#id_height").val(cropData["height"]);
+        $("#id_width").val(cropData["width"]);
+        $('#formUpload').submit()
+      });
+
+    });
+  </script>
+
+
+<style>
+  html, body{
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  input[type="file"] {
+    display: none;
+}
+
+.uploadimagebutton{
+  cursor: pointer;
+}
+</style>
+<br><br><br><br>
+<div class="row">
+  <div class="col-sm-12 col-md-4 col-lg-4 " style="background: linear-gradient(30deg, white, 52%, white, 10px, rgb(255, 210, 126));">
+    <div class="text-center">
+      <img src="/media/{{data.myimage}}" class="img-fluid" style="border-radius:50%; " height=70% width="70%" alt="">
+    </div>
+    <!-- change picture form here-->
+    {% if request.user == mainuser %}
+  <div style="position: absolute; top:2%; right:2%">
+    <form method="POST" enctype="multipart/form-data" id="formUpload">
+      {% csrf_token %}
+        <label for="id_myimage" class="uploadimagebutton"><span class="badge badge-primary"><span class="mbri-upload"></span> Change Image</span></label>
+        <input type="file" id="id_myimage", name="myimage">
+        <input type="hidden" id="id_x" name="x">
+        <input type="hidden" id="id_y" name="y">
+        <input type="hidden" id="id_width" name="width">
+        <input type="hidden" id="id_height" name="height">        
+        
+    </form>
+</div>
+{% endif %}
+
+  </div>
+  <div class="col-sm-12 col-md-8 col-lg-8">
+    <br>
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+      <h1 class="text-capitalize " style="font-family: 'Black Han Sans', sans-serif;">{{ userinfo.displayname }}
+          {% if request.user == mainuser %}
+          <a href="{% url 'editprofileinfo' mainuser.pk %}" style="font-size: 1rem; font-family:'Courier New', Courier, monospace;" class="align-middle"><span class=" align-middle badge badge-primary"><span class="mbri-setting3"></span> edit info </span> </a>
+          {% endif %}
+      </h1>
+      <h5 class="">{{ userinfo.designation }}</h5>
+      </div>
+
+    <div class="col-md-6">
+        <div class="d-none d-md-block">
+         <h1 class="float-md-right mr-5"><span class="mbri-edit"></span><span style="font-family: 'Black Han Sans', sans-serif;"> 32 </span><span style="font-size:1.2rem;">articles</span></h1>
+      </div>
+   </div>
+    
+    </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-6">
+      <div class="pt-5">
+      <blockquote>{{ userinfo.description }}</blockquote>
+      </div>
+    </div>
+    <div class="col-md-6">
+        <div class="d-none d-md-block mt-4">
+         <h1 class="float-md-right mr-5"><span class="mbri-preview"></span><span style="font-family: 'Black Han Sans', sans-serif;"> {{ userinfo.views }} </span><span style="font-size:1.2rem;">views</span></h1>
+      </div>
+   </div>
+  
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+        <div class=" d-sm-block d-md-none d-xl-none ">
+          <div class="row">
+            <div class="col-sm-6">
+            <h1 class="float-md-right mr-5"><span class="mbri-edit"></span><span style="font-family: 'Black Han Sans', sans-serif;"> 32 </span><span style="font-size:1rem;">articles</span></h1>
+            </div>
+            <div class="col-sm-6">
+            <h1 class="float-md-right mr-5"><span class="mbri-preview"></span><span style="font-family: 'Black Han Sans', sans-serif;"> {{ userinfo.views }} </span><span style="font-size:1rem;">views</span></h1>
+              </div>
+              </div>
+          </div>
+    </div>
+  </div>
+
+</div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-sm-12">
+      <h2 class="text-center">~ Articles ~</h2>
+    </div>
+  </div>
+  <hr>
+<div class="row">
+
+    <div class="container-fluid">
+        <div class="card-columns">
+            
+            {% for post in blogs %}
+            <div class="card border border-dark">
+                    <a href="{% url 'postdetail' post.pk %}">
+                        <img class="card-img-top" src="{{ post.topbanner.url }}" alt="Card image cap">
+                    </a>
+
+                <div class="card-body">
+                    <a href="{% url 'postdetail' post.pk %}"><h4 class="card-title">{{ post.title }}</h4></a>
+                    <p class="card-text"><a href="{% url 'postdetail' post.pk %}" class="text-black">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</a></p>
+                    <p class="card-text text-right"><small class="text-muted">written by <a href="" class="text-black">{{ post.author }}</a></small></p>
+                </div>
+            </div>
+
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="modal fade" id="modalCrop">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Crop the photo</h4>
+        </div>
+        <div class="modal-body">
+          <img src="" id="image" style="max-width: 100%;">
+        </div>
+        <div class="modal-footer">
+          <div class="btn-group pull-left" role="group">
+            <button type="button" class="btn btn-default js-zoom-in">
+              <span class="glyphicon glyphicon-zoom-in"></span>zoom in
+            </button>
+            <button type="button" class="btn btn-default js-zoom-out">
+              <span class="glyphicon glyphicon-zoom-out"></span>zoom out
+            </button>
+          </div>
+          <button type="button" class="btn btn-primary js-crop-and-upload">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+{% endblock %}

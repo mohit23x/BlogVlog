@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 
 {% block body %}
 
+
+
 <section class="mbr-section content5 cid-qOrpftxYjK mbr-parallax-background" id="content5-z">
 
-    <div class="mbr-overlay" style="opacity: 0.4; background-color: rgb(35, 35, 35);">
+    <div class="mbr-overlay" style="opacity: 0.7; background-color: rgb(0, 0, 0);">
     </div>
 
     <div class="container">
@@ -22,6 +25,7 @@
 </section>
 
 <style>
+    
     .cid-qOrpftxYjK{
         background-image: url("{{ data1.topbanner.url }}");
     }
@@ -51,53 +55,8 @@
 </section>
 
 
-<!-- comments section code -->
 
-<div class="row">
-        <div class="col-sm-12 col-md-8 offset-md-2" >
-<h3>comments</h3>
-<form method="POST">
-{% csrf_token %}
 
-{{ form1 }}
-
-<button type="submit">submit</button>
-
-</form>
-<br>
-<hr>
-<br>
-
-{% for comments in com %}
-<p>{{ comments.user }} ---
-{{ comments.message }}&nbsp;&nbsp;{% if comments.user == request.user %}<a href="{% url 'commentdelete' comments.pk %}">delete</a>{% endif %}
-<br>
-<form method='POST'>
-    {% csrf_token %}
-
-    <label for="id_whichcomment">whichcomment</label>
-    <input type="hidden" name='whichcomment' id='id_whichcomment' value="{{comments.id}}">
-    &nbsp;
-    <label for="id_message">Message:</label>
-    <input type="text" name='message' maxlength="250" id="id_message">    
-    <button type="submit">submit</button>
-</form>
-<ul>
-{% for r in replycom %}
-
-{% if r.whichcomment.message == comments.message %}
-
-<li><blockquote>{{r.user }} -- {{ r.message }}&nbsp;&nbsp;{% if r.user == request.user %}<a href="{% url 'commentreplydelete' r.pk %}">delete</a>{% endif %}</blockquote></li>
-
-{% endif %}
-
-{% endfor %}
-</ul></p>
-
-<br>
-{% endfor %}
-
-</div></div>
 
 
 
@@ -105,26 +64,149 @@
 
 <section class="testimonials3 cid-qOrqR1IiVK" id="testimonials3-17">
 
-    <div class="container">
-        <div class="media-container-row">
-            <div class="media-content px-3 align-self-center mbr-white py-2">
-                <p class="mbr-text testimonial-text mbr-fonts-style display-7">
-                   It's really very amazing app that makes me finish html page in 3 minutes that's usually takes more than 1 hours at least from me if i did it from scratch
-                </p>
-                <p class="mbr-author-name pt-4 mb-2 mbr-fonts-style display-3">
-                   Julie C.
-                </p>
-                <p class="mbr-author-desc mbr-fonts-style display-7">
-                   INTERFACE DESIGNER
-                </p>
+        <div class="container">
+            <div class="media-container-row">
+                <div class="media-content px-3 align-self-center mbr-white py-2">
+                    <p class="mbr-text testimonial-text mbr-fonts-style display-7">
+                       About the author
+                    </p>
+                    <p class="mbr-author-name pt-4 mbr-fonts-style display-3">
+                       <a href="{% url 'profile' authorinfo.author %}" class="mbr-fonts-style text-black">{{userinfo_object.displayname }} </a>
+                    </p>
+                    <p class="mbr-author-desc mbr-fonts-style display-7">
+                       {{userinfo_object.designation}}
+                    </p>
+                </div>
+                <div class="mbr-figure pl-lg-5">
+                  <img src="/media/{{authorinfo.myimage}}" height="100%" width="100%">
+                </div>
             </div>
+        </div>
+    </section>
+    
 
-            <div class="mbr-figure pl-lg-5" style="width: 60%;">
-              <img src="assets/images/face5.jpg">
+
+
+
+<!-- comments section code -->
+{% if user.is_authenticated %}
+
+<div class="row">
+<div class="col-sm-12 col-md-8 offset-md-2" >
+<br>
+<h4>Post Comments:</h4><hr>
+<form method="POST">
+{% csrf_token %}
+{% for field in form1.visible_fields %}
+
+    <div class="form-group">
+      {{ field.label_tag }}
+      {% render_field field class="form-control" %}
+    </div>
+{% endfor %}
+
+<button type="submit" class="btn btn-warning">Add Comment</button>
+
+</form>
+<br>
+<hr>
+<br>
+</div>
+</div>
+
+<div class="container">
+{% for comments in com %}
+
+<div class="comment mb-1 row">
+    <div class="comment-avatar col-md-2 col-sm-2 col-xs-2 text-center  d-none d-sm-block">
+        <a href=""><img class="mx-auto rounded-circle img-fluid" src="/media/{{ comments.usrimg.myimage }}" alt="avatar"></a>
+    </div>
+    <div class="comment-content col-md-10 col-sm-9 col-xs-9">
+        <h6 class="small comment-meta"><a href="#">{{comments.user}}</a> Today, 2:38</h6>       
+        <div class="comment-body">
+            <h5>
+                {{ comments.message }}</h5>{% if comments.user == request.user %}<a href="{% url 'commentdelete' comments.pk %}" class="small"><span class="badge badge-primary">delete</span></a>{% endif %}
+            
+        </div>
+        <div class="replybutton" style="">
+            <span class="text-right small"> Reply</span>
+        </div>
+
+    <div class="row replybox" style="display: none">
+        <div class="col-sm-12 ml-5 pl-5">
+            <form method='POST'>
+                {% csrf_token %}
+                <input type="hidden" name='whichcomment' id='id_whichcomment' value="{{comments.id}}">
+                <input class="" type="text" name='message' maxlength="250" id="id_message" placeholder="Reply. . . ">
+                <button style="padding:1%;" class="btn" type="submit">submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+<br>
+
+
+
+{% for r in replycom %}
+{% if r.whichcomment.message == comments.message %}
+
+
+
+<div class="comment-reply col-md-11 offset-md-1 col-sm-10 offset-sm-2">
+        <div class="row">
+
+            <div class="comment-avatar col-md-1 col-sm-2 text-center pr-1  d-none d-sm-block">
+                <a href=""><img class="mx-auto rounded-circle img-fluid" src="/media/{{ r.usrimg.myimage }}" alt="avatar"></a>
+            </div>
+            <div class="comment-content col-md-11 col-sm-10 col-12">
+                <h6 class="small comment-meta"><a href="#">{{r.user}}</a> Today, 12:31</h6>
+                <div class="comment-body">
+                    <h5>{{ r.message }}</h5>{% if r.user == request.user %}<a href="{% url 'commentreplydelete' r.pk %}" class="small"><span class="badge badge-primary">delete</span></a>{% endif %}
             </div>
         </div>
     </div>
-</section>
+</div>
+
+
+
+{% endif %}
+{% endfor %}
+<br><hr>
+{% endfor %}
+</div>
+{% else %}
+
+
+<section class="mbr-section info2 cid-qOrr15WCRi" id="info2-19">
+        <div class="container">
+           <div class="row main justify-content-center">
+               <div class="media-container-column col-12 col-lg-3 col-md-4">
+                   <div class="mbr-section-btn align-left py-4">
+                       <a class="btn btn-primary display-4" href="https://mobirise.com">
+                       <span class="mbri-preview mbr-iconfont"></span>
+                       SEE MORE
+                       </a>
+                   </div>
+               </div>
+               <div class="media-container-column title col-12 col-lg-7 col-md-6">
+                   <h2 class="align-right mbr-bold mbr-white pb-3 mbr-fonts-style display-2">WHY DONT YOU LOGIN</h2>
+                   <h3 class="mbr-section-subtitle align-right mbr-light mbr-white mbr-fonts-style display-5">and enjoy various other features like reading, liking, commenting, connecting, posting etc.</h3>
+               </div>
+           </div>
+       </div>
+   </section>
+   
+
+
+{% endif %}
+
+
+
+
+<br><hr>
+
+
 
 <section class="features3 cid-qOrs7HrXvl" id="features3-1b">
 
@@ -189,29 +271,6 @@
     </div>
 </section>
 
-<section class="mbr-section info2 cid-qOrr15WCRi" id="info2-19">
-
-    
-
-    
-
-    <div class="container">
-        <div class="row main justify-content-center">
-            <div class="media-container-column col-12 col-lg-3 col-md-4">
-                <div class="mbr-section-btn align-left py-4">
-                    <a class="btn btn-primary display-4" href="https://mobirise.com">
-                    <span class="mbri-preview mbr-iconfont"></span>
-                    SEE MORE
-                    </a>
-                </div>
-            </div>
-            <div class="media-container-column title col-12 col-lg-7 col-md-6">
-                <h2 class="align-right mbr-bold mbr-white pb-3 mbr-fonts-style display-2">WHY DONT YOU LOGIN</h2>
-                <h3 class="mbr-section-subtitle align-right mbr-light mbr-white mbr-fonts-style display-5">and enjoy various other features like reading, liking, commenting, connecting, posting etc.</h3>
-            </div>
-        </div>
-    </div>
-</section>
 
 <section once="" class="cid-qOrru7r8z5" id="footer7-1a">
 
@@ -272,12 +331,22 @@
 
 <script>
 
-    $(document).ready(function(){
-        var src = $('.postimg').attr('src');
-        console.log(src)
-        $('img.postimg').attr('src', src.replace('images_i','images_{{data1.id}}'));
-      });
+
+        $(document).ready(function(){
+            $('img').each(function(){
+              var src = $(this).attr('src');;
+              $(this).attr('src', src.replace('post_images_i','post_images_{{data1.id}}'));
+            });
+          });
+
+
+        $('.replybutton').click( function(){
+            $(this).next('.replybox').toggle();
+            console.log('triggered');
+
+        });
       
+
 </script>
 </body>
 </html>

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% block body %}
+
+<br>
+<br><br>
+<hr>
+{% for d in documentdata %}
+
+{{d}}<br>
+{{d.image}}<br>
+{{d.image.url}}<br>
+
+
+{% endfor %}
+<br><br><hr>
+
+<h3>Lets Edit Post  -</h3><hr>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    {% for hidden_field in form.hidden_fields %}
+    {{ hidden_field.errors }}
+    {{ hidden_field }}
+    {% endfor %}
+
+{% for field in form.visible_fields %}
+    <div class="form-group">
+      {{ field.label_tag }}
+
+        {% render_field field class="form-control" %}
+
+      {% if field.help_text %}
+        <small class="form-text text-muted">{{ field.help_text }}</small>
+      {% endif %}
+    </div>
+  {% endfor %}
+<br>
+  <hr><br>
+    {{ formset.management_form }}
+    {% for form in formset %}
+    {% for field in form.visible_fields %}
+    <div class="form-group">
+      {{ field.label_tag }}
+      {% render_field field class="form-control" %}
+      {% if field.help_text %}
+        <small class="form-text text-muted">{{ field.help_text }}</small>
+      {% endif %}
+    </div>
+     {% endfor %}
+    {% endfor %}
+
+
+    <button type="submit" class="btn btn-success">Post Blog</button>
+    <a href="{% url 'homepage' %}" class="btn btn-danger">Cancel</a>
+  </form>
+
+
+{% endblock %}

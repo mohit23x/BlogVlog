@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<style>
+    #gobackbutton{
+        background: linear-gradient(to bottom right, rgb(188, 189, 190), 30%, rgb(240, 251, 255));
+        border: 1px solid transparent;
+        text-shadow: 1px 1px 20px rgb(93, 97, 100);
+        color: rgb(8, 25, 58);
+        padding: 10%;
+        margin-left: 2%;
+        margin-top: 2%;
+    
+    }
+    #gobackbutton:hover{
+        background: linear-gradient(to bottom right, rgb(110, 112, 114), 50%, rgb(240, 251, 255), 30%, rgb(10, 14, 19), 10%);
+        border: 1px solid lightblue;
+        text-shadow: 1px 1px 20px rgb(136, 139, 143);
+    }
+.searchblog:hover{
+    background: rgb(230, 243, 246);
+    transition: 0.2s linear;
+    }
+    .searchuser:hover{
+        background: rgb(255, 247, 232);    
+    }
+</style>
+
+<br><br><br><br>
+<div class="row">
+<div class="col-xs-6">
+<a href="{{ref}}" id="gobackbutton" class="btn "> <- &nbsp;<b> GO BACK</b></a>
+</div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <p>{{err}}</p>
+    </div>
+</div>
+
+<div class="row">
+{% for res in results1 %}
+<div class="col-xs-12 col-md-6">
+<div class="ml-3">
+<div class="searchblog">
+<blockquote>
+    <h4><a href="{% url 'postdetail' res.id %}">{{res.title}}</a></h4>
+    <span class=" small badge badge-primary">blog</span>
+</blockquote>
+</div>
+</div></div>
+{% endfor %}
+</div>
+
+<div class="row">
+{% for ress in results2 %}
+<div class="col-xs-12 col-md-6">
+
+<div class="ml-3">
+<div class="searchuser">
+    <blockquote>
+            <h4><a href="{% url 'profile' ress.author.username %}">{{ress.displayname}}</a></h4>
+            <span class=" small badge badge-warning">user</span>
+    </blockquote>
+</div>
+    </div></div>
+    {% endfor %}
+</div>
+
+
+
+
+
+<script>
+
+
+</script>
+
+        
+{% endblock %}

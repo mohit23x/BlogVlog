@@ -1,14 +1,23 @@
 {% extends 'base.html' %}
 
 {% block body %}
+<style>
 
+@media (min-width: 576px){
+    .jumbotron {
+     padding: 2%;
+    }
+}
+
+</style>
 <br><br><br>
 <div class="jumbotron">
     <div class="row">
         <div class="col-sm-12 col-md-6">
-        <p class="lead">Hi <a href="http://www.profile.com" class="text-black">{{ request.user }}</a><br><em>We hope you Enjoy Reading !</em></p>
+        <p class="lead">Hi <a href="{% if user.isauthenticated %}{% url 'profile' request.user %}{% else%}#{% endif %}" class="text-black">{{ request.user.first_name }}</a><br><em>{% if user.is_authenticated %} {% if request.user.email %}We hope you Enjoy Reading !{% else %}Please  fill this short form <a href="{% url 'editprofileinfo' request.user.pk %}" class="btn btn-outline-primary" style="padding:2%;">Fill Form</a>{% endif %}{% else %}Making an account just takes 30sec... <a href="{% url 'login' %}">Click here Login or Signup</a>{% endif %} </em></p>
       </div>    
-    </div></div>
+    </div>
+</div>
 
 
     <div class="container-fluid">
@@ -17,15 +26,20 @@
             {% for post in object_list %}
             <div class="card border border-dark">
                     <a href="{% url 'postdetail' post.pk %}">
-                        <img class="card-img-top" src="{{ post.topbanner.url }}" alt="Card image cap">
+                        <img class="card-img-top" src="media/{{ post.topbanner}}" alt="Card image cap">
                     </a>
 
                 <div class="card-body">
                     <a href="{% url 'postdetail' post.pk %}"><h4 class="card-title">{{ post.title }}</h4></a>
-                    <p class="card-text"><a href="{% url 'postdetail' post.pk %}" class="text-black">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</a></p>
-                    <p class="card-text text-right"><small class="text-muted">written by <a href="" class="text-black">{{ post.author }}</a></small></p>
-                </div>
-            </div>
+                    <p class="card-text"><a href="{% url 'postdetail' post.pk %}" class="text-black">{% autoescape off %}{{post.text|truncatechars:100}}{% endautoescape %}</a></p>
+                    <div class="row">
+                        <div class="col-xs-9 col-sm-9">
+                            <p class="card-text"><small class="text-muted">written by <a href="" class="text-black">{{ post.author.first_name }}</a></small></p>
+                        </div>
+                        <div class="col-xs-3 col-sm-3">
+                                <p class="card-text text-right"><small class="text-muted"><a href="" class="text-black"><span class="badge badge-primary"># {{ post.category }}</span> </a></small></p>
+                        </div>
+</div>            </div></div>
 
             {% endfor %}
 

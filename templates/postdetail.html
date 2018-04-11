@@ -41,6 +41,7 @@
 <ul>
 {% for r in replycom %}
 
+
 {% if r.whichcomment.message == comments.message %}
 
 <li><blockquote>{{r.user }} -- {{ r.message }}&nbsp;&nbsp;{% if r.user == request.user %}<a href="{% url 'commentreplydelete' r.pk %}">delete</a>{% endif %}</blockquote></li>
@@ -53,13 +54,33 @@
 <br>
 {% endfor %}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
 
 <script>
     $("#ajaxbutton").click(function (){
         $ajax({
             type: "POST",
-            url: "{% url 'postdetail' data1.id %}",
+            url: "{% url 'postdetaill' data1.id %}",
             data: {"message":$("#id_message").val(), "whichcomment": $("#id_whichcomment").val()},
             beforeSend:function(xhr){
                 xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'));  
