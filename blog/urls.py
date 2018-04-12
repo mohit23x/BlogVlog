@@ -16,9 +16,9 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/', include('accounts.urls')),
     path('post/postnew', views.BlogPostNew.as_view(), name='postnew'),
-    path('mockup', views.mockup, name='mockup'),
     path('profile/<str:nam>', views.profile, name='profile'),
     path('editprofileinfo/<int:pk>', views.userInfoFormView, name='editprofileinfo'),
     path('search', views.search, name='search'),
+    path('category/<str:hashtags>', views.categoryview, name='category'),
 
 ]

@@ -11,16 +11,15 @@ from PIL import Image
 from django import forms
 from simple_search import search_filter
 from django.http import JsonResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
-def mockup(request):
-    return render(request, 'details mockup.html')
+
 
 class Homepage(ListView):
     model = Blog
     template_name = 'homepage.html'
     paginate_by = 10
-#    queryset = Blog.objects.all().order_by('-date')
 
     context_object_name = 'object_list'
     model = Blog
@@ -40,19 +39,12 @@ class Homepage(ListView):
 
 
 
-
-
-
 class AboutUs(TemplateView):
     template_name = 'aboutus.html'
 
-'''class PostDetail(DetailView):
-    model = Blog
-    template_name = 'postdetail.html'''
-
-
 
 def newpost(request):
+    hashtag = Hashtag.objects.all().order_by('name')
     
     DocumentFormSet = modelformset_factory(Document, form=DocumentForm, extra=5)
 
@@ -75,11 +67,12 @@ def newpost(request):
     else:
         form = BlogForm
         formset = DocumentFormSet(queryset=Document.objects.none())
-        return render(request, 'postnew.html', {'form':form, 'formset':formset})
+        return render(request, 'postnew.html', {'form':form, 'formset':formset, 'hashtag':hashtag})
 
 
 
 def user_image_func(request):
+    hashtag = Hashtag.objects.all().order_by('name')
     
     user = User.objects.get(username=request.user.username)
     try:
@@ -111,14 +104,15 @@ def user_image_func(request):
     else:
         if imgdata:
             form = UserImageForm(initial={'displayname': imgdata.displayname, 'description':imgdata.description, 'designation':imgdata.designation })
-            return render(request, 'userimage.html', {'form': form})
+            return render(request, 'userimage.html', {'form': form, 'hashtag':hashtag})
         else:
             form = UserImageForm()
-            return render(request, 'userimage.html', {'form': form})
+            return render(request, 'userimage.html', {'form': form, 'hashtag':hashtag})
 
 
 
 def PostDetail(request, pk):
+    hashtag = Hashtag.objects.all().order_by('name')
     form1 = CommentForm
     form2 = CommentReplyForm
     data1 = Blog.objects.get(pk=pk)
@@ -176,7 +170,7 @@ def PostDetail(request, pk):
                 return HttpResponseRedirect(reverse('postdetail', args=(), kwargs={'pk': pk}))
                 
     else:
-        return render(request, 'details mockup.html', {'data1': data1, 'form1':form1, 'com': com, 'form2':form2, 'replycom':replycom, 'documents':documents, 'authorinfo':authorinfo, 'userinfo_object':userinfo_object})
+        return render(request, 'details mockup.html', {'data1': data1, 'form1':form1, 'com': com, 'form2':form2, 'replycom':replycom, 'documents':documents, 'authorinfo':authorinfo, 'userinfo_object':userinfo_object, 'hashtag':hashtag})
     
 
 
@@ -220,6 +214,7 @@ class CommentDelete(DeleteView):
     
 
 def profile(request, nam):
+    hashtag = Hashtag.objects.all().order_by('name')
     mainuser = User.objects.get(username = nam)
     blogs = Blog.objects.filter(author = mainuser)
     form = UserImageForm()
@@ -259,14 +254,15 @@ def profile(request, nam):
             user = User.objects.get(username=request.user.username)
             don.author = user
             don.save()
-            return render(request, 'profile.html', {'data':data, 'mainuser':mainuser, 'blogs':blogs, 'form':form, 'userinfo':userinfo})
+            return render(request, 'profile.html', {'data':data, 'mainuser':mainuser, 'blogs':blogs, 'form':form, 'userinfo':userinfo, 'hashtag':hashtag})
 
     else:
-        return render(request, 'profile.html', {'data':data, 'mainuser':mainuser, 'blogs':blogs, 'form':form, 'userinfo':userinfo})
+        return render(request, 'profile.html', {'data':data, 'mainuser':mainuser, 'blogs':blogs, 'form':form, 'userinfo':userinfo, 'hashtag':hashtag})
 
 
 
 def userInfoFormView(request, pk):
+    hashtag = Hashtag.objects.all().order_by('name')
 
     mainuser = User.objects.get(pk = pk)
     userinfo_object = UserInfo.objects.get(author = mainuser)
@@ -289,13 +285,14 @@ def userInfoFormView(request, pk):
             mainuser.save()
             return redirect('profile', mainuser)
 
-    return render(request, 'editinfo.html', {'form':form})
+    return render(request, 'editinfo.html', {'form':form, 'hashtag':hashtag})
 
 
 
 
 
 def search(request):
+    hashtag = Hashtag.objects.all().order_by('name')
     referer = request.META.get('HTTP_REFERER')
 
     try:
@@ -318,14 +315,26 @@ def search(request):
     ff = search_filter(search_field2, query)
     filtered2 = UserInfo.objects.filter(ff)
         
-    return render(request, 'search.html', {'results1':filtered1, 'results2': filtered2, 'ref': referer, 'err':err})
+    return render(request, 'search.html', {'results1':filtered1, 'results2': filtered2, 'ref': referer, 'err':err, 'hashtag':hashtag})
 
 
 
 
+def categoryview(request, hashtags):
+    hash = Hashtag.objects.get(name=hashtags)
+    hashtag = Hashtag.objects.all().order_by('name')
+    try:
+        object_list = Blog.objects.filter(category=hash)
+    except:
+        object_list = ''
+        err = 'No post in this category'
+        return render(request, 'categoryview.html', {'object_list':object_list, 'err':err, 'hashtag':hashtag})
+
+    return render(request, 'categoryview.html', {'object_list':object_list, 'hashtag':hashtag})
 
 
 
+    
     '''
     
     <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro.min.css">

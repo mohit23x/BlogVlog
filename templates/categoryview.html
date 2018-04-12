@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<style>
+
+@media (min-width: 576px){
+    .jumbotron {
+     padding: 2%;
+    }
+}
+
+</style>
+<br><br><br><br>
+
+{% if err %}
+<div class="row">
+    <div class="col-sm-10 offset-sm-1">
+        <h2 class="text-center">{{err}}</h2>
+    </div>
+</div>
+
+{% endif %}
+
+
+
+
+
+
+    <div class="container-fluid">
+        <div class="card-columns">
+                <div class="infinite_container">
+            {% for post in object_list %}
+            <div class="card border border-dark">
+                    <a href="{% url 'postdetail' post.pk %}">
+                        <img class="card-img-top" src="/media/{{ post.topbanner}}" alt="Card image cap">
+                    </a>
+
+                <div class="card-body">
+                    <a href="{% url 'postdetail' post.pk %}"><h4 class="card-title">{{ post.title }}</h4></a>
+                    <p class="card-text"><a href="{% url 'postdetail' post.pk %}" class="text-black">{% autoescape off %}{{post.text|truncatechars:100}}{% endautoescape %}</a></p>
+                    <div class="row">
+                        <div class="col-xs-9 col-sm-9">
+                            <p class="card-text"><small class="text-muted">written by <a href="" class="text-black">{{ post.author.first_name }}</a></small></p>
+                        </div>
+                        <div class="col-xs-3 col-sm-3">
+                                <p class="card-text text-right"><small class="text-muted"><a href="" class="text-black"><span class="badge badge-primary"># {{ post.category }}</span> </a></small></p>
+                        </div>
+</div>            </div></div>
+
+            {% endfor %}
+</div>
+        </div>
+    </div>
+ 
+
+
+
+
+</body>
+</html>
+
+
+
+{% endblock %}
+
+
+
+{% if posts.has_other_pages  %}
+<div class="row">
+    <div class="col-sm-12 col-md-8 offset-md-2">
+    <br>
+<ul class="pagination justify-content-center">
+    {% if posts.has_previous %}
+        <li  class="page-item"><a  class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>    
+        </a></li>
+    {% else %}
+        <li class='disabled page-item'> <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a><li>
+    {% endif %}
+    {% for i in posts.paginator.page_range %}
+        {% if page_obj.number == i %}
+            <li class="page-item active"><span><a class="page-link" href="?page={{i}}">{{ i }} </a></span></li>
+        {% else %}
+            <li  class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+        {% endif %}
+    {% endfor %}
+    {% if posts.has_next %}
+        <li><a class="page-link"  href="?page={{ page_obj.next_page_number }}"> <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span></a></li>
+    {% else %}
+        <li class="disabled page-item"><a href=""  class="page-link" ><span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span></a></li>
+    {% endif %}
+</ul>
+{% endif %}
